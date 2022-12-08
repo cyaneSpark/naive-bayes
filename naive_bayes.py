@@ -10,18 +10,22 @@ def train_naive_bayes(training_data):
     sick_data_features = seperate_features(sick_data)
     healthy_data_features = seperate_features(healthy_data)
 
-    generate_pdfs(sick_data_features)
+    sick_pdfs = generate_pdfs(sick_data_features)
+    healthy_pdfs = generate_pdfs(healthy_data_features)
 
+    figure, axis = plt.subplots(1,len(healthy_pdfs))
     
+    for i in range(len(sick_pdfs)):
+        x1 = np.linspace(sick_pdfs[i].mean()-4*sick_pdfs[i].std(),sick_pdfs[i].mean()+4*sick_pdfs[i].std(),100)
+        axis[i].plot(x1, sick_pdfs[i].pdf(x1), linewidth=2, color='r')
+        
+        x2 = np.linspace(healthy_pdfs[i].mean()-4*healthy_pdfs[i].std(),healthy_pdfs[i].mean()+4*healthy_pdfs[i].std(),100)
+        axis[i].plot(x1, healthy_pdfs[i].pdf(x2), linewidth=1, color='b')
+
+        axis[i].set_title("Feature " + str(i))
     
 
-
-    
-    #x = np.linspace(mean[0]-4*std[0],mean[0]+4*std[0],100)
-    #plt.plot(x, pdfs[0].pdf(x), linewidth=2, color='r')
-    #plt.axis([mean[0]-4*std[0],mean[0]+4*std[0], 0, 1.5])
-    #plt.scatter(features_data[0],len(features_data[0])*[0], color='k')
-    #plt.show()
+    plt.show()
 
     return 5
 
@@ -39,5 +43,6 @@ def generate_pdfs(data_features):
         mean= np.mean(feature)
         std = np.std(feature)
         pdfs.append(stats.norm(mean, std))
+        print(pdfs[-1].pdf(0))
 
     return pdfs
