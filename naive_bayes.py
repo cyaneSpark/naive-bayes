@@ -6,25 +6,15 @@ def train_naive_bayes(training_data):
 
     sick_data = [data for data in training_data if data[10]==2.0]
     healthy_data = [data for data in training_data if data[10]==1.0]
-    
-    print(sick_data[0])
-    print(healthy_data[0])
-
 
     sick_data_features = seperate_features(sick_data)
     healthy_data_features = seperate_features(healthy_data)
 
-    print(sick_data_features[1])
-    print(healthy_data_features[1])
+    generate_pdfs(sick_data_features)
 
-    #mean = [0]* len(features_data)
-    #std = [0]* len(features_data)
-    #pdfs = [0]* len(features_data)
     
-    #for i in range(len(features_data)):
-     #   mean[i]= np.mean(features_data[i])
-      #  std[i] = np.std(features_data[i])
-       # pdfs[i] = stats.norm(mean[i], std[i])
+    
+
 
     
     #x = np.linspace(mean[0]-4*std[0],mean[0]+4*std[0],100)
@@ -41,3 +31,13 @@ def seperate_features(data):
 
     del(features[-1])
     return features
+
+def generate_pdfs(data_features):
+    pdfs = []
+
+    for feature in data_features:
+        mean= np.mean(feature)
+        std = np.std(feature)
+        pdfs.append(stats.norm(mean, std))
+
+    return pdfs
