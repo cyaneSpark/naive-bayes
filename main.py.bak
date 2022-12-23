@@ -4,7 +4,7 @@ from NaiveBayes import *
    
 data = pre_process()
 
-k = 5
+k = 10
 training_folds, testing_folds = k_fold_cross_validation(k,data)
 
 trained_naive_bayes = []

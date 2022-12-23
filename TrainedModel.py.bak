@@ -3,7 +3,7 @@ from matplotlib import pyplot as plt
 import scipy.stats as stats
 import math
 
-class TrainedModel:
+class TrainedModel: #this should probably be renamed to TrainedFold
     def __init__(self, training_data):
         self.data = training_data
 
