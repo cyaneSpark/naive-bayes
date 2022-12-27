@@ -54,14 +54,14 @@ class NaiveBayes:
 
         if healthy_p>sick_p:
             if int(entry[-1])==1:
-                return "TP" #True Positive
-            else:
-                return "FP" #False Positive
-        else:
-            if int(entry[-1])==2:
                 return "TN" #True Negative
             else:
                 return "FN" #False Negative
+        else:
+            if int(entry[-1])==2:
+                return "TP" #True Positive
+            else:
+                return "FP" #False Positive
 
     def test_data_set(self, data):
         FP = 0
@@ -81,11 +81,8 @@ class NaiveBayes:
                 TN+=1
 
         accuracy = (TP+TN)/(TP+TN+FP+FN)
-        print("Accuracy: " + str(accuracy))
         sensitivity = TP/(TP+FN)
-        print("Sensitivity: " + str(sensitivity))
         specificity = TN/(TN+FP)
-        print("Specificity: " + str(specificity))
         geometric_mean = math.sqrt(sensitivity*specificity)
-        print("Geometric Mean: " + str(geometric_mean))
+        
         return accuracy, sensitivity, specificity, geometric_mean

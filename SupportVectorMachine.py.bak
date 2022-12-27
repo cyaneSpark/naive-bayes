@@ -2,7 +2,7 @@ import numpy as np
 import scipy.stats as stats
 import math
 
-class NaiveBayes: 
+class SupportVectorMachine: 
     def __init__(self, training_data):
         self.data = training_data
 

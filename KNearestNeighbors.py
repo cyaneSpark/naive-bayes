@@ -2,7 +2,7 @@ import numpy as np
 import scipy.stats as stats
 import math
 
-class NaiveBayes: 
+class KNearestNeighbors: 
     def __init__(self, training_data):
         self.data = training_data
 
@@ -81,11 +81,7 @@ class NaiveBayes:
                 TN+=1
 
         accuracy = (TP+TN)/(TP+TN+FP+FN)
-        print("Accuracy: " + str(accuracy))
         sensitivity = TP/(TP+FN)
-        print("Sensitivity: " + str(sensitivity))
         specificity = TN/(TN+FP)
-        print("Specificity: " + str(specificity))
         geometric_mean = math.sqrt(sensitivity*specificity)
-        print("Geometric Mean: " + str(geometric_mean))
         return accuracy, sensitivity, specificity, geometric_mean
