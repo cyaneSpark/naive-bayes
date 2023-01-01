@@ -74,17 +74,35 @@ print_pretty_model_metrics(accuracy, sensitivity, specificity, geometric_mean, k
 # K NEAREST NEIGHBORS
 
 trained_k_nearest = []
-
-for i in range(k):
-    trained_k_nearest.append(KNearestNeighbors(training_folds[i]))
-
-accuracy = [0]*k
-sensitivity = [0]*k
-specificity = [0]*k
-geometric_mean = [0]*k
-
-for i in range(k):
-    accuracy[i], sensitivity[i], specificity[i], geometric_mean[i] = trained_k_nearest[i].test_data_set(testing_folds[i])
-
 print("!!-----!!----!!----!!----!!----!!    K-NEAREST NEIGHBORS   !!----!!----!!----!!----!!-----!!")
-print_pretty_model_metrics(accuracy, sensitivity, specificity, geometric_mean, k)
+geometric_means = []
+specificities = []
+sensitivities = []
+accuracies = []
+for nnk in range(3,16,2):
+    print("             ---------------------         k = " + str(nnk)+"     -------------------                ")
+    for i in range(k):
+        trained_k_nearest.append(KNearestNeighbors(training_folds[i]))
+
+    accuracy = [0]*k
+    sensitivity = [0]*k
+    specificity = [0]*k
+    geometric_mean = [0]*k
+
+    for i in range(k):
+        accuracy[i], sensitivity[i], specificity[i], geometric_mean[i] = trained_k_nearest[i].test_data_set(testing_folds[i],nnk)
+
+    accuracies.append((sum(accuracy)/k,nnk))
+    sensitivities.append((sum(sensitivity)/k,nnk))
+    specificities.append((sum(specificity)/k,nnk))
+    geometric_means.append((sum(geometric_mean)/k,nnk))
+    print_pretty_model_metrics(accuracy, sensitivity, specificity, geometric_mean, k)
+
+accuracies.sort(reverse=True)
+print("Based on the heighest Accuracy Score("+str(accuracies[0][0])+") the best value for k is: "+str(accuracies[0][1]))
+sensitivities.sort(reverse=True)
+print("Based on the heighest Sensitivity Score("+str(sensitivities[0][0])+") the best value for k is: "+str(sensitivities[0][1]))
+specificities.sort(reverse=True)
+print("Based on the heighest Specificity Score("+str(specificities[0][0])+") the best value for k is: "+str(specificities[0][1]))
+geometric_means.sort(reverse=True)
+print("Based on the heighest Geometric Mean Score("+str(geometric_means[0][0])+") the best value for k is: "+str(geometric_means[0][1]))
