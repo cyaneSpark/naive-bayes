@@ -56,20 +56,24 @@ print_pretty_model_metrics(accuracy, sensitivity, specificity, geometric_mean, k
 # SUPPORT VECTOR MACHINE
 
 trained_svm = []
+print("!!-----!!----!!----!!----!!----!!  SUPPORT VECTOR MACHINE   !!----!!----!!----!!----!!-----!!")
+print("!!-----!!----!!----!!----!!----!!          LINEAR           !!----!!----!!----!!----!!-----!!")
+for c in range(1,200,5):
+    print("             ---------------------         C = " + str(c)+"     -------------------                ")
+    trained_svm.append(SupportVectorMachine(c))
+    for i in range(k):
+        trained_svm[-1].train_model(training_folds[i])
 
-for i in range(k):
-    trained_svm.append(SupportVectorMachine(training_folds[i]))
+    accuracy = [0]*k
+    sensitivity = [0]*k
+    specificity = [0]*k
+    geometric_mean = [0]*k
 
-accuracy = [0]*k
-sensitivity = [0]*k
-specificity = [0]*k
-geometric_mean = [0]*k
+#for i in range(k):
+   # accuracy[i], sensitivity[i], specificity[i], geometric_mean[i] = trained_svm[i].test_data_set(testing_folds[i])
 
-for i in range(k):
-    accuracy[i], sensitivity[i], specificity[i], geometric_mean[i] = trained_svm[i].test_data_set(testing_folds[i])
-
-print("!!-----!!----!!----!!----!!----!!  SUPPORT VECTOR MACHINE  !!----!!----!!----!!----!!-----!!")
-print_pretty_model_metrics(accuracy, sensitivity, specificity, geometric_mean, k)
+#p
+#print_pretty_model_metrics(accuracy, sensitivity, specificity, geometric_mean, k)
 
 # K NEAREST NEIGHBORS
 
@@ -79,7 +83,7 @@ geometric_means = []
 specificities = []
 sensitivities = []
 accuracies = []
-for nnk in range(3,16,2):
+for nnk in range(3,16,2): #only odds to avoid ties
     print("             ---------------------         k = " + str(nnk)+"     -------------------                ")
     for i in range(k):
         trained_k_nearest.append(KNearestNeighbors(training_folds[i]))

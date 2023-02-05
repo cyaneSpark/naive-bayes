@@ -6,18 +6,6 @@ class KNearestNeighbors:
     def __init__(self, training_data):
         self.data = training_data
 
-       # self.sick_data = [data for data in training_data if data[10]==2.0]
-        #self.healthy_data = [data for data in training_data if data[10]==1.0]
-
-        #self.sick_data_features = self.seperate_features(self.sick_data)
-       # self.healthy_data_features = self.seperate_features(self.healthy_data)
-
-       # self.sick_pdfs = self.train_model(self.sick_data_features)
-       # self.healthy_pdfs = self.train_model(self.healthy_data_features)
-
-       # self.prior_p_sick = len(self.sick_data)/len(self.data)
-        #self.prior_p_healthy = len(self.healthy_data)/len(self.data)
-
     def manhattan_distance(self, point_A, point_B):
         total = 0
         for i in range(len(point_A)-1):
@@ -49,7 +37,7 @@ class KNearestNeighbors:
                 healthy+=1
             elif int(neighbor[-1])==2:
                 sick+=1
-        
+
         if healthy>sick:
             if int(entry[-1])==1:
                 return "TN" #True Negative
