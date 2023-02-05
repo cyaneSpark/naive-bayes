@@ -6,8 +6,8 @@ class NaiveBayes:
     def __init__(self, training_data):
         self.data = training_data
 
-        self.sick_data = [data for data in training_data if data[10]==2.0]
-        self.healthy_data = [data for data in training_data if data[10]==1.0]
+        self.sick_data = [data for data in training_data if data[-1]==2.0]
+        self.healthy_data = [data for data in training_data if data[-1]==1.0]
 
         self.sick_data_features = self.seperate_features(self.sick_data)
         self.healthy_data_features = self.seperate_features(self.healthy_data)

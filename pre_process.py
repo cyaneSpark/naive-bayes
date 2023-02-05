@@ -1,4 +1,6 @@
 import csv
+import scipy
+import numpy as nps
 
 def pre_process(filename='Indian Liver Patient Dataset (ILPD).csv'):
 
@@ -49,3 +51,31 @@ def pre_process(filename='Indian Liver Patient Dataset (ILPD).csv'):
         for i in range(features-1):
             entry[i] = -1 +(((entry[i]-data_min[i])*(2))/data_range[i])
     return data
+
+#transposing the training_data will create a separate list for each feature
+def seperate_features(data):
+    features = list(map(list, zip(*data)))
+
+    del(features[-1])
+    return features
+
+def student_t_test(dataset):
+    sick_data = [data for data in dataset if data[-1]==2.0]
+    healthy_data = [data for data in dataset if data[-1]==1.0]
+
+    sick_data_features = seperate_features(sick_data)
+    healthy_data_features = seperate_features(healthy_data)
+
+    test_results =[]
+    
+    for i in range(10):
+        (t,p) = scipy.stats.ttest_ind(sick_data_features[i], healthy_data_features[i])
+        test_results.append([i,abs(t),p])
+
+    sorted_list = sorted(test_results, key=lambda x: x[2])
+    columns_to_remove = []
+    for i in range(5,10):
+        columns_to_remove.append(sorted_list[i][0])
+        
+    dataset = [[row[i] for i in range(len(row)) if i not in columns_to_remove] for row in dataset]
+    return dataset

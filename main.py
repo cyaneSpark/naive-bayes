@@ -175,6 +175,10 @@ def knn():
 
 data = pre_process()
 
+#STUDENT'S TEST
+
+data = student_t_test(data)
+
 # 5-FOLD CROSS VALIDATION
 
 k = 5
