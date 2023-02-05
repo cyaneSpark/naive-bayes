@@ -104,32 +104,22 @@ print("Based on the heighest Geometric Mean Score("+str(geometric_means[0][0])+"
 print()
 
 
-#for i in range(k):
-   # accuracy[i], sensitivity[i], specificity[i], geometric_mean[i] = trained_svm[i].test_data_set(testing_folds[i])
-
-#p
-#print_pretty_model_metrics(accuracy, sensitivity, specificity, geometric_mean, k)
-
 # K NEAREST NEIGHBORS
 
-trained_k_nearest = []
 print("!!-----!!----!!----!!----!!----!!    K-NEAREST NEIGHBORS   !!----!!----!!----!!----!!-----!!")
 geometric_means = []
 specificities = []
 sensitivities = []
 accuracies = []
 for nnk in range(3,16,2): #only odds to avoid ties
-    print("             ---------------------         k = " + str(nnk)+"     -------------------                ")
-    for i in range(k):
-        trained_k_nearest.append(KNearestNeighbors(training_folds[i]))
-
     accuracy = [0]*k
     sensitivity = [0]*k
     specificity = [0]*k
     geometric_mean = [0]*k
-
+    print("             ---------------------         k = " + str(nnk)+"     -------------------                ")
     for i in range(k):
-        accuracy[i], sensitivity[i], specificity[i], geometric_mean[i] = trained_k_nearest[i].test_data_set(testing_folds[i],nnk)
+        trained_k_nearest = KNearestNeighbors(training_folds[i])
+        accuracy[i], sensitivity[i], specificity[i], geometric_mean[i] = trained_k_nearest.test_data_set(testing_folds[i],nnk)
 
     accuracies.append((sum(accuracy)/k,nnk))
     sensitivities.append((sum(sensitivity)/k,nnk))
