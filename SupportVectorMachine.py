@@ -2,19 +2,21 @@ import numpy as np
 import scipy.stats as stats
 import math
 from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
 
 class SupportVectorMachine: 
-    def __init__(self, c):
-        self.linear_SVM = LinearSVC(C=c, max_iter=70000)
+    def __init__(self, c, g = None):
+        if g==None:
+            self.SVM = LinearSVC(C=c, max_iter=70000)
+        else:
+            self.SVM = SVC(kernel='rbf', C=c, gamma=g, max_iter=70000)
 
     def train_model(self, training_data):
-        self.data = training_data
-
         training_array = np.array(training_data)
 
-        self.training_x = training_array[:,:-1]
-        self.training_y = training_array[:,-1]
-        self.linear_SVM.fit(self.training_x,self.training_y)
+        training_x = training_array[:,:-1]
+        training_y = training_array[:,-1]
+        self.SVM.fit(training_x,training_y)
 
     def test_data_set(self, test_data):
 
@@ -22,7 +24,7 @@ class SupportVectorMachine:
         testing_x = testing_array[:,:-1]
         testing_y = testing_array[:,-1]
 
-        predicted_y = self.linear_SVM.predict(testing_x)
+        predicted_y = self.SVM.predict(testing_x)
 
         FP = 0
         TP = 0

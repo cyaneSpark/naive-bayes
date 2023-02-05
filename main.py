@@ -1,3 +1,4 @@
+import numpy as np
 from pre_process import *
 from k_fold_cross_validation import *
 from NaiveBayes import *
@@ -32,6 +33,14 @@ def print_pretty_model_means_only(accuracy, sensitivity, specificity, geometric_
     mean_geometric_mean = sum(geometric_mean)/k
 
     print("   "+"%0{}d".format(3)%c+"  | " +'{0:.16f}'.format(mean_accuracy) +" | "+'{0:.16f}'.format(mean_sensitivity)+" | "+'{0:.16f}'.format(mean_specificity)+" | "+'{0:.16f}'.format(mean_geometric_mean)+" |")
+
+def print_pretty_model_means_only_float(accuracy, sensitivity, specificity, geometric_mean, k, gamma):
+    mean_accuracy = sum(accuracy)/k
+    mean_sensitivity = sum(sensitivity)/k
+    mean_specificity = sum(specificity)/k
+    mean_geometric_mean = sum(geometric_mean)/k
+
+    print("   "+'{0:.1f}'.format(gamma)+"  | " +'{0:.16f}'.format(mean_accuracy) +" | "+'{0:.16f}'.format(mean_sensitivity)+" | "+'{0:.16f}'.format(mean_specificity)+" | "+'{0:.16f}'.format(mean_geometric_mean)+" |")
     
 
 # PRE RPOCESS
@@ -63,7 +72,6 @@ print_pretty_model_metrics(accuracy, sensitivity, specificity, geometric_mean, k
 
 # SUPPORT VECTOR MACHINE
 
-trained_svm = []
 print("!!-----!!----!!----!!----!!----!!  SUPPORT VECTOR MACHINE   !!----!!----!!----!!----!!-----!!")
 geometric_means = []
 specificities = []
@@ -90,18 +98,60 @@ for c in range(1,201,5):
     print_pretty_model_means_only(accuracy, sensitivity, specificity, geometric_mean, k, c)
 
 print("--------------------------------------------------------------------------------------------")
-print("!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!")
+print("!!-----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!-----!!")
 print()
 
 accuracies.sort(reverse=True)
-print("Based on the heighest Accuracy Score("+str(accuracies[0][0])+") the best value for k is: "+str(accuracies[0][1]))
+print("Based on the heighest Accuracy Score("+str(accuracies[0][0])+") the best value for C is: "+str(accuracies[0][1]))
 sensitivities.sort(reverse=True)
-print("Based on the heighest Sensitivity Score("+str(sensitivities[0][0])+") the best value for k is: "+str(sensitivities[0][1]))
+print("Based on the heighest Sensitivity Score("+str(sensitivities[0][0])+") the best value for C is: "+str(sensitivities[0][1]))
 specificities.sort(reverse=True)
-print("Based on the heighest Specificity Score("+str(specificities[0][0])+") the best value for k is: "+str(specificities[0][1]))
+print("Based on the heighest Specificity Score("+str(specificities[0][0])+") the best value for C is: "+str(specificities[0][1]))
 geometric_means.sort(reverse=True)
-print("Based on the heighest Geometric Mean Score("+str(geometric_means[0][0])+") the best value for k is: "+str(geometric_means[0][1]))
+print("Based on the heighest Geometric Mean Score("+str(geometric_means[0][0])+") the best value for C is: "+str(geometric_means[0][1]))
 print()
+
+C = geometric_means[0][1]
+
+geometric_means = []
+specificities = []
+sensitivities = []
+accuracies = []
+print("!!-----!!----!!----!!----!!----!!          RBFSVM           !!----!!----!!----!!----!!-----!!")
+print("--------------------------------------------------------------------------------------------")
+print("    γ   |      Accuracy      |     Sensitivity    |     Specificity    |   Geometric Mean   |")
+print("--------------------------------------------------------------------------------------------")
+for gamma in np.arange(0,10,0.5):
+    svm = SupportVectorMachine(C, gamma)
+    accuracy = [0]*k
+    sensitivity = [0]*k
+    specificity = [0]*k
+    geometric_mean = [0]*k
+    for i in range(k):
+        svm.train_model(training_folds[i])
+        accuracy[i], sensitivity[i], specificity[i], geometric_mean[i] = svm.test_data_set(testing_folds[i])
+
+    accuracies.append((sum(accuracy)/k,gamma))
+    sensitivities.append((sum(sensitivity)/k,gamma))
+    specificities.append((sum(specificity)/k,gamma))
+    geometric_means.append((sum(geometric_mean)/k,gamma))
+    print_pretty_model_means_only_float(accuracy, sensitivity, specificity, geometric_mean, k, gamma)
+
+print("--------------------------------------------------------------------------------------------")
+print("!!-----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!-----!!")
+print()
+
+accuracies.sort(reverse=True)
+print("Based on the heighest Accuracy Score("+str(accuracies[0][0])+") the best value for γ is: "+str(accuracies[0][1]))
+sensitivities.sort(reverse=True)
+print("Based on the heighest Sensitivity Score("+str(sensitivities[0][0])+") the best value for γ is: "+str(sensitivities[0][1]))
+specificities.sort(reverse=True)
+print("Based on the heighest Specificity Score("+str(specificities[0][0])+") the best value for γ is: "+str(specificities[0][1]))
+geometric_means.sort(reverse=True)
+print("Based on the heighest Geometric Mean Score("+str(geometric_means[0][0])+") the best value for γ is: "+str(geometric_means[0][1]))
+print()
+
+
 
 
 # K NEAREST NEIGHBORS
