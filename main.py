@@ -25,6 +25,14 @@ def print_pretty_model_metrics(accuracy, sensitivity, specificity, geometric_mea
 
     print()
 
+def print_pretty_model_means_only(accuracy, sensitivity, specificity, geometric_mean, k, c):
+    mean_accuracy = sum(accuracy)/k
+    mean_sensitivity = sum(sensitivity)/k
+    mean_specificity = sum(specificity)/k
+    mean_geometric_mean = sum(geometric_mean)/k
+
+    print("   "+"%0{}d".format(3)%c+"  | " +'{0:.16f}'.format(mean_accuracy) +" | "+'{0:.16f}'.format(mean_sensitivity)+" | "+'{0:.16f}'.format(mean_specificity)+" | "+'{0:.16f}'.format(mean_geometric_mean)+" |")
+    
 
 # PRE RPOCESS
 
@@ -57,17 +65,44 @@ print_pretty_model_metrics(accuracy, sensitivity, specificity, geometric_mean, k
 
 trained_svm = []
 print("!!-----!!----!!----!!----!!----!!  SUPPORT VECTOR MACHINE   !!----!!----!!----!!----!!-----!!")
+geometric_means = []
+specificities = []
+sensitivities = []
+accuracies = []
 print("!!-----!!----!!----!!----!!----!!          LINEAR           !!----!!----!!----!!----!!-----!!")
-for c in range(1,200,5):
-    print("             ---------------------         C = " + str(c)+"     -------------------                ")
-    trained_svm.append(SupportVectorMachine(c))
-    for i in range(k):
-        trained_svm[-1].train_model(training_folds[i])
-
+print("--------------------------------------------------------------------------------------------")
+print("    C   |      Accuracy      |     Sensitivity    |     Specificity    |   Geometric Mean   |")
+print("--------------------------------------------------------------------------------------------")
+for c in range(1,201,5):
+    svm = SupportVectorMachine(c)
     accuracy = [0]*k
     sensitivity = [0]*k
     specificity = [0]*k
     geometric_mean = [0]*k
+    for i in range(k):
+        svm.train_model(training_folds[i])
+        accuracy[i], sensitivity[i], specificity[i], geometric_mean[i] = svm.test_data_set(testing_folds[i])
+
+    accuracies.append((sum(accuracy)/k,c))
+    sensitivities.append((sum(sensitivity)/k,c))
+    specificities.append((sum(specificity)/k,c))
+    geometric_means.append((sum(geometric_mean)/k,c))
+    print_pretty_model_means_only(accuracy, sensitivity, specificity, geometric_mean, k, c)
+
+print("--------------------------------------------------------------------------------------------")
+print("!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!----!!")
+print()
+
+accuracies.sort(reverse=True)
+print("Based on the heighest Accuracy Score("+str(accuracies[0][0])+") the best value for k is: "+str(accuracies[0][1]))
+sensitivities.sort(reverse=True)
+print("Based on the heighest Sensitivity Score("+str(sensitivities[0][0])+") the best value for k is: "+str(sensitivities[0][1]))
+specificities.sort(reverse=True)
+print("Based on the heighest Specificity Score("+str(specificities[0][0])+") the best value for k is: "+str(specificities[0][1]))
+geometric_means.sort(reverse=True)
+print("Based on the heighest Geometric Mean Score("+str(geometric_means[0][0])+") the best value for k is: "+str(geometric_means[0][1]))
+print()
+
 
 #for i in range(k):
    # accuracy[i], sensitivity[i], specificity[i], geometric_mean[i] = trained_svm[i].test_data_set(testing_folds[i])
