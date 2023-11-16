@@ -176,7 +176,7 @@ def knn():
 data = pre_process()
 
 #STUDENT'S TEST
-
+#comment out next line to test with whole dataset instead of the 5 best features
 data = student_t_test(data)
 
 # 5-FOLD CROSS VALIDATION
